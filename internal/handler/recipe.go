@@ -128,7 +128,10 @@ func SaveImage(c *gin.Context, filename string) string {
 	path := "public/images/" + filename + filepath.Ext(file.Filename)
 	err := c.SaveUploadedFile(file, path)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, dto.Response{
+			Error:   err.Error(),
+			Message: "error uploading file.",
+		})
 		return ""
 	}
 	return path

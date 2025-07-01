@@ -3,6 +3,7 @@ package util
 import (
 	"errors"
 	"github.com/golang-jwt/jwt/v5"
+	"os"
 	"time"
 )
 
@@ -12,8 +13,8 @@ type CustomClaims struct {
 }
 
 var (
-	AccessTokenSecret  = []byte("secret")  // TODO: Replace with env
-	RefreshTokenSecret = []byte("refresh") // TODO: Replace with env
+	AccessTokenSecret  = []byte(os.Getenv("ACCESS_TOKEN_SECRET"))
+	RefreshTokenSecret = []byte(os.Getenv("REFRES_TOKEN_SECRET"))
 	AccessExpiryTime   = time.Minute * 10
 	RefreshExpiryTime  = time.Hour * 24 * 7
 )
@@ -22,9 +23,9 @@ func GenerateTokens(userID string, email string) (accessToken string, refreshTok
 	accessClaims := CustomClaims{
 		jwt.RegisteredClaims{
 			Subject:   userID,
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(AccessExpiryTime)), // TODO: Replace with env
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(AccessExpiryTime)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			Issuer:    "go-recipe-api", // TODO: Replace with env
+			Issuer:    os.Getenv("APP_NAME"),
 		},
 		email,
 	}
@@ -36,7 +37,7 @@ func GenerateTokens(userID string, email string) (accessToken string, refreshTok
 	}
 
 	refreshClaims := accessClaims
-	refreshClaims.ExpiresAt = jwt.NewNumericDate(time.Now().Add(RefreshExpiryTime)) // TODO: Replace with env
+	refreshClaims.ExpiresAt = jwt.NewNumericDate(time.Now().Add(RefreshExpiryTime))
 	refreshToken, err = at.SignedString(RefreshTokenSecret)
 	return
 }
