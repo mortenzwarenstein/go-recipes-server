@@ -26,7 +26,7 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	r.Run(":8080")
+	r.Run(":" + os.Getenv("PORT"))
 }
 
 func initApp() (*gin.Engine, *gorm.DB) {
