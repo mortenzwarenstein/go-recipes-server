@@ -12,3 +12,4 @@ fabric.properties
 .idea/
 public/
 tmp/
+.env
